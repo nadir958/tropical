@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\VehiculeRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=VehiculeRepository::class)
@@ -27,30 +29,37 @@ class Vehicule
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"vehicules_read"})
+     * @Assert\NotBlank(message="le nom de la vehicule est obligatoire")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"vehicules_read"})
+     * @Assert\NotBlank(message="le type de la vehicule est obligatoire")
      */
     private $type;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"vehicules_read"})
+     * @Assert\Type(type="integer", message="vous devez entrer un nombre")
+     * @Assert\NotBlank(message="le nombre des places est obligatoire")
      */
     private $nombreplace;
 
     /**
      * @ORM\Column(type="string", length=65000)
      * @Groups({"vehicules_read"})
+     * @Assert\NotBlank(message="la description de la vehicule est obligatoire")
      */
     private $description;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Groups({"vehicules_read"})
+     * @Assert\NotBlank(message="la photo de la vehicule est obligatoire")
      */
     private $photo;
 
