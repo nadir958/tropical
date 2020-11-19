@@ -92,7 +92,7 @@ const VehiculesPage = props => {
                             <td>{vehicule.photo}</td>
                             <td>{vehicule.envedette}</td>
                             <td>
-                                <button className="btn btn-sm btn-warning">Modifier</button>
+                                <button className="btn btn-sm btn-warning mr-1">Modifier</button>
                                 <button
                                     onClick={() => handleDelete(vehicule.id)}
                                     className="btn btn-sm btn-danger"
