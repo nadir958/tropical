@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import TableLoader from '../components/loaders/TableLoader';
 import Pagination from '../components/Pagination';
 import vehiculeAPI from '../services/vehiculeAPI';
 import VehiculesAPI from "../services/vehiculeAPI";
@@ -9,14 +11,16 @@ const VehiculesPage = props => {
     const [vehicules, setVehicules] = useState([]);
     const [currentPage,setCurrentPage] = useState(1);
     const [search,setSearch] = useState("");
+    const [loading, setLoading] = useState(true);
 
     //permet de recuperer les vehicules
     const fetchVehicules = async () =>{
         try {
             const data = await VehiculesAPI.findAll()
             setVehicules(data);
+            setLoading(false);
         } catch (error) {
-            console.log(error.response)
+            toast.error("Erreur lors du chargement des vehicules")
         }
     }
 
@@ -29,8 +33,10 @@ const VehiculesPage = props => {
 
         setVehicules(vehicules.filter(vehicule => vehicule.id !== id));
         try {
-            await vehiculeAPI.delete(id)
+            await vehiculeAPI.delete(id);
+            toast.success("La vehicule a bien été supprimée");
         } catch (error) {
+            toast.error("Une erreur est survenue");
             setVehicules(originalVehicules);
         }
     };
@@ -86,7 +92,7 @@ const VehiculesPage = props => {
                         <th>Action</th>
                     </tr>
                 </thead>
-                <tbody>
+                {!loading && (<tbody>
                     {paginatedVehicules.map(vehicule => (
                         <tr key={vehicule.id}>
                             <td>{vehicule.id}</td>
@@ -111,8 +117,10 @@ const VehiculesPage = props => {
                     ))}
 
                 </tbody>
-
+                )}
             </table>
+
+            {loading && <TableLoader/>}
             {itemsPerPage < filteredVehicules.length && (
             <Pagination currentPage={currentPage} itemsPerPage={itemsPerPage}
                 length={filteredVehicules.length} onPageChanged={handlePageChange}/>

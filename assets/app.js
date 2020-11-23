@@ -12,6 +12,9 @@ import './styles/app.css';
 import LoginPage from './js/pages/LoginPage';
 import authAPI from './js/services/authAPI';
 import PrivateRoute from './js/components/PrivateRoute';
+import { toast, ToastContainer } from 'react-toastify';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 authAPI.setup();
 
@@ -56,7 +59,7 @@ const App = () => {
                     <Route path="/" component={HomePage}/>
                 </Switch>
             </main>
-
+            <ToastContainer position={toast.POSITION.BOTTOM_LEFT}/>
         </HashRouter>
     );
 };

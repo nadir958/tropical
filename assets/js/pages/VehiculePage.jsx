@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Field from '../components/forms/Field';
+import FormContentLoader from '../components/loaders/FormContentLoader';
 import vehiculeAPI from '../services/vehiculeAPI';
 
 const VehiculePage = (props) => {
     const {id = "new"} = props.match.params;
+    const [loading, setLoading] = useState(false);
 
     const [vehicule, setVehicule] = useState({
         nom: "",
@@ -29,10 +32,10 @@ const VehiculePage = (props) => {
     const fetchVehicule = async id => {
         try {
             const {type, description, envedette, nom, nombreplace, photo} = await vehiculeAPI.find(id);
-
             setVehicule({nom,type,nombreplace,description,photo,envedette});
+            setLoading(false);
         } catch (error) {
-            //TODO : notif erreur
+            toast.error("impossible de charger la vehicule");
             history.replace("/vehicules");
         }
     };
@@ -40,6 +43,7 @@ const VehiculePage = (props) => {
     //chargement de la vehicule si besoin au chargement du composant ou au changement de l'identifiant
     useEffect(()=>{
         if(id !== "new") {
+            setLoading(true);
             setEditing(true);
             fetchVehicule(id)
         }
@@ -58,10 +62,11 @@ const VehiculePage = (props) => {
         try {
             if(editing){
                 await vehiculeAPI.update(id, vehicule);
+                toast.success("la vehicule a été modifiée avec succées");
             }else{
                 await vehiculeAPI.create(vehicule);
-
                 props.history.replace("/vehicules");
+                toast.success("vehicule a été ajoutée avec succées");
             }
             
             setErrors({});
@@ -73,6 +78,7 @@ const VehiculePage = (props) => {
                         apiErrors[propertyPath] = message;
                     });
                     setErrors(apiErrors);
+                    toast.error("Des erreurs dans votre formulaire");
                 }
             }
         };
@@ -82,8 +88,8 @@ const VehiculePage = (props) => {
         {(!editing && <h1>Création d'une Vehicule</h1>) || 
             (<h1>Modification d'une Vehicule</h1>
             )}
-
-        <form onSubmit={handleSubmit}>
+        {loading && <FormContentLoader/> }
+        {!loading && <form onSubmit={handleSubmit}>
             <Field name="nom" label="nom de la vehicule" placeholder="nom de la vehicule" value={vehicule.nom} onChange={handleChange} error={errors.nom}/>
             <Field name="type" label="type" placeholder="type de la vehicule" value={vehicule.type} onChange={handleChange} error={errors.type}/>
             <Field name="nombreplace" label="nombre de places" placeholder="nombre de places" type="number" value={vehicule.nombreplace} onChange={handleChange} error={errors.nombreplace}/>
@@ -95,7 +101,7 @@ const VehiculePage = (props) => {
                 <button type="submit" className="btn btn-success">Enregistrer</button>
                 <Link to="/vehicules" className="btn btn-link">Retour à la liste</Link>
             </div>
-        </form>
+        </form>}
     </>  
     );
 }
