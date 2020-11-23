@@ -4,6 +4,7 @@ import Navbar from './js/components/Navbar';
 import HomePage from './js/pages/HomePage';
 import {HashRouter,Switch,Route,withRouter, Redirect} from "react-router-dom";
 import VehiculesPage from './js/pages/VehiculesPage';
+import VehiculePage from './js/pages/VehiculePage';
 import UsersPage from './js/pages/UsersPage'
 
 // any CSS you import will output into a single css file (app.css in this case)
@@ -32,6 +33,12 @@ const App = () => {
                         render={props => (
                         <LoginPage onLogin={setIsAuthenticated} {...props}/>
                         )}
+                    />
+
+                    <PrivateRoute 
+                        path="/vehicules/:id" 
+                        isAuthenticated={isAuthenticated} 
+                        component={VehiculePage}
                     />
 
                     <PrivateRoute 

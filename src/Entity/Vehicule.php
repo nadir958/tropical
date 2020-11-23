@@ -14,7 +14,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ApiResource(
  * normalizationContext={
  *      "groups"={"vehicules_read"}
- * }
+ * },
+ * denormalizationContext={"disable_type_enforcement"=true}
  * )
  */
 class Vehicule
@@ -42,9 +43,8 @@ class Vehicule
     private $type;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", length=255)
      * @Groups({"vehicules_read"})
-     * @Assert\Type(type="integer", message="vous devez entrer un nombre")
      * @Assert\NotBlank(message="le nombre des places est obligatoire")
      */
     private $nombreplace;
@@ -103,7 +103,7 @@ class Vehicule
         return $this->nombreplace;
     }
 
-    public function setNombreplace(int $nombreplace): self
+    public function setNombreplace( $nombreplace): self
     {
         $this->nombreplace = $nombreplace;
 

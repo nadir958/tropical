@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Pagination from '../components/Pagination';
 import vehiculeAPI from '../services/vehiculeAPI';
 import VehiculesAPI from "../services/vehiculeAPI";
@@ -61,7 +62,13 @@ const VehiculesPage = props => {
 
     return (
         <>
-            <h1>Liste des vehicules</h1>
+            <div className="mb-2 d-flex justify-content-between align-items-center">
+                <h1>Liste des vehicules</h1>
+                <Link to="/vehicules/new" className="btn btn-primary">
+                    Créer une vehicule
+                </Link>
+            </div>
+            
 
             <div className="form-group">
                 <input type="text" onChange={handleSearch} value={search} className="form-control" placeholder="Rechercher..."/>
@@ -92,7 +99,7 @@ const VehiculesPage = props => {
                             <td>{vehicule.photo}</td>
                             <td>{vehicule.envedette}</td>
                             <td>
-                                <button className="btn btn-sm btn-warning mr-1">Modifier</button>
+                                <Link to={"/vehicules/" + vehicule.id}className="btn btn-sm btn-warning mr-1">Modifier</Link>
                                 <button
                                     onClick={() => handleDelete(vehicule.id)}
                                     className="btn btn-sm btn-danger"
